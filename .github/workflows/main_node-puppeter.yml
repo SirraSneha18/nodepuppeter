@@ -1,7 +1,6 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
+# Deploy Node.js app with Puppeteer to Azure Web App
 
-name: Build and deploy Node.js app to Azure Web App - node-puppeter
+name: Build and deploy Node.js app to Azure Web App - node-puppeteer
 
 on:
   push:
@@ -13,20 +12,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read #This is required for actions/checkout
+      contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
 
-      - name: npm install, build
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Install Chromium (for Puppeteer)
         run: |
-          npm install
-          npm run build --if-present
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
@@ -43,7 +46,7 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    
+
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
@@ -52,12 +55,15 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
-      
-      - name: 'Deploy to Azure Web App'
+
+      - name: Set Execute Permissions
+        run: chmod +x server.js
+
+      - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'node-puppeter'
+          app-name: 'node-puppeteer'
           slot-name: 'Production'
           package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_EF3A712034CC4002BF1AEC50BB33197B }}
