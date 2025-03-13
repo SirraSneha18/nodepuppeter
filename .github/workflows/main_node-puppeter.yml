@@ -1,5 +1,4 @@
 # Deploy Node.js app with Puppeteer to Azure Web App
-
 name: Build and deploy Node.js app to Azure Web App - node-puppeteer
 
 on:
@@ -26,11 +25,6 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Install Chromium (for Puppeteer)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y chromium-browser
-
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
 
@@ -55,9 +49,6 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
-
-      - name: Set Execute Permissions
-        run: chmod +x server.js
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
