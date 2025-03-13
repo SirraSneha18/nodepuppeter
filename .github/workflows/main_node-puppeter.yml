@@ -66,4 +66,4 @@ jobs:
           app-name: 'node-puppeteer'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_EF3A712034CC4002BF1AEC50BB33197B }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
